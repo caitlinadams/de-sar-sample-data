@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Geoscience Australia SAR Backscatter Demo"
 version = "0.0.1"
-dependencies = ["dea-tools>=0.4.7,<0.5"]
+dependencies = ["dea-tools>=0.4.7,<0.5", "stac-geoparquet>=0.7.0,<0.8", "fsspec"]
 
 [tool.setuptools.packages.find]
 where = ["."]
