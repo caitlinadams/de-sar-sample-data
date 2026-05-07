@@ -20,3 +20,4 @@ dependencies:
 - pip:
   - -e .
   - dea-tools>=0.4.7, <0.5
+  - pystac==1.12.1
