@@ -11,6 +11,8 @@ Geoscience Australia's Sentinel-1 data is published across multiple products, on
 
 There are two collections available: Collection 0 and Collection 1. We recommend using Collection 1 as it is closer to the format we will use for final data release. If Collection 1 does not have sufficient coverage to meet your test case, we recommend looking at Collection 0, which has wider area coverage and deeper timeseries data.
 
+There is also a small collection of sample Sentinel-1 Extra Wide (EW) mode backscatter data for Antarctica.
+
 ### Collection 0
 You can see the distribution of captured data for Collection 0 over time and space in the DEA Dev Explorer:
 * [Collection 0 VV+VH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_vh_0)
@@ -25,6 +27,7 @@ You can see the distribution of captured data for Collection 1 over time and spa
 * [Collection 1 HH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_1)
 * [Collection 1 HH+HV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_hv_1)
 
+
 ## Documentation
 
 This repository provides examples for how to load data in two ways:
@@ -33,16 +36,19 @@ This repository provides examples for how to load data in two ways:
 
 If you are not a Geoscience Australia employee, you will need to use the STAC API approach.
 
+### Interferometric Wide Mode Data
 Both Collection 0 and Collection 1 are available.
 
 We provide [iPython notebooks](demo_notebooks), which can be run in an appropriate environment.
   * [Collection 0 tutorial](demo_notebooks/tutorial_c0)
   * [Collection 1 tutorial](demo_notebooks/tutorial_c1)
 
-To run the notebooks, you will first need to [clone the repository](#cloning-the-repository) to get a copy of the files.
-
 We also have a collection of recorded videos that provide an overview of each iPython notebook. 
 If you wish to view these videos, please contact DigitalEarthAntarctic@ga.gov.au to request access.
+
+### Extra Wide Mode Data
+We also provide an [iPython notebook](extended_examples/loading_EW_data_with_stac_geoparquet.ipynb) demonstrating how to load sample EW backscatter data over Antarctica.
+This uses a different access method, connecting to a GeoParquet file rather than a STAC API.
 
 ## Set up
 
@@ -72,21 +78,25 @@ Two different environment files are provided:
     * [Activate the environment](https://pixi.sh/dev/workspace/environment/#activation)
 
 You can also choose to manually install the following required packages using your preferred python package manager:
-* botocore       1.40.70
-* dea_tools      0.4.7
-* folium         0.19.7
-* geopandas      1.1.1
-* ipykernel      6.31.0
-* ipywidgets     8.1.8
-* matplotlib     3.10.7
-* netcdf4        1.7.3
-* numpy          2.3.4
-* odc-stac       0.4.0
-* pystac-client  0.8.6
-* python         3.13.9
-* scikit-image   0.25.2
-* scipy          1.16.3
-* de_sar_demo    0.0.1    (use `pip install .` from the repository directory)
+* asf_search       10.1.2
+* botocore         1.40.70
+* dea_tools        0.4.7
+* folium           0.19.7
+* fsspec           2025.10.0
+* geopandas        1.1.1
+* ipykernel        6.31.0
+* ipywidgets       8.1.8
+* matplotlib       3.10.7
+* netcdf4          1.7.3
+* numpy            2.3.4
+* odc-stac         0.4.0
+* pystac           1.14.1 
+* pystac-client    0.8.6
+* python           3.13.9
+* scikit-image     0.25.2
+* scipy            1.16.3
+* stac_geoparquet  0.7.0 
+* de_sar_demo      0.0.1    (use `pip install .` from the repository directory)
 
 #### DEA Sandbox
 This is intended for employees internal to Geoscience Australia.
