@@ -30,6 +30,7 @@ python = ">=3.13.3,<3.14"
 ipykernel = ">=6.29.5,<7"
 odc-stac = "*"
 pystac-client = ">=0.8.6,<0.9"
+pystac = ">=1.12.1,<2"
 numpy = ">=2.2.5,<3"
 folium = ">=0.19.5,<0.20"
 botocore = ">=1.38.15,<2"
@@ -53,14 +54,3 @@ sed -ix "s/^name: default$/name: de-sar-sample-data/" environment.yaml; rm envir
 
 [tool.pixi.feature.dev.dependencies]
 nbconvert = ">=7.16.6,<8"
-
-[tool.pixi.feature.dev.tasks]
-convert-notebooks-basic = "pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/tutorial/01_product_info.ipynb --output-dir='demo_html_pages/tutorial' --execute"
-convert-notebooks-stac = """
-pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/tutorial/02_demonstration.ipynb --output-dir='demo_html_pages/tutorial' --execute && \
-pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/tutorial/03_loading_with_stac.ipynb --output-dir='demo_html_pages/tutorial' --execute && \
-pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/tutorial/05_post_processing.ipynb --output-dir='demo_html_pages/tutorial' --execute
-pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/extended_examples/dataloading_known_scenes.ipynb --output-dir='demo_html_pages/extended_examples' --execute
-pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/extended_examples/visualisation_sar_optical_timeseries_animation.ipynb --output-dir='demo_html_pages/extended_examples' --execute
-"""
-convert-notebooks-datacube = "pixi run -e dev jupyter nbconvert --to HTML demo_notebooks/tutorial/04_loading_with_datacube.ipynb --output-dir='demo_html_pages/tutorial' --execute"
