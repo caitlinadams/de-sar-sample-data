@@ -1,18 +1,29 @@
-# Accessing the Digital Earth Normalised Radar Backscatter Product for Sentinel-1 from Geoscience Australia (Collection 0)
+# Accessing the Digital Earth Normalised Radar Backscatter Product for Sentinel-1 from Geoscience Australia 
 
 This repository demonstrates how to use Python to access preliminary Sentinel-1 Interferometric Wide (IW) mode backscatter products developed by Geoscience Australia. 
 
-For Sentinel-1, Geoscience Australia's Digital Earth (DE) branch are currently offering a suite of experimental products that we are calling **collection 0**, with sample data available over parts of Australia and Antarctica.
+For Sentinel-1, Geoscience Australia's Digital Earth (DE) branch are currently offering a suite of experimental products, with sample data available over parts of Australia and Antarctica.
 The product is a collaborative effort from Digital Earth Australia and Digital Earth Antarctica, with support from the CSIRO.
 
 ## Data availability
 
 Geoscience Australia's Sentinel-1 data is published across multiple products, one for each polarisation mode used to capture the data.
-You can see the distribution of captured data over time and space in the DEA Dev Explorer:
-* [VV+VH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_vh_0)
-* [VV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_0)
-* [HH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_0)
-* [HH+HV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_hv_0)
+
+There are two collections available: Collection 0 and Collection 1. We recommend using Collection 1 as it is closer to the format we will use for final data release. If Collection 1 does not have sufficient coverage to meet your test case, we recommend looking at Collection 0, which has wider area coverage and deeper timeseries data.
+
+### Collection 0
+You can see the distribution of captured data for Collection 0 over time and space in the DEA Dev Explorer:
+* [Collection 0 VV+VH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_vh_0)
+* [Collection 0 VV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_0)
+* [Collection 0 HH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_0)
+* [Collection 0 HH+HV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_hv_0)
+
+### Collection 1
+You can see the distribution of captured data for Collection 1 over time and space in the DEA Dev Explorer:
+* [Collection 1 VV+VH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_vh_1)
+* [Collection 1 VV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_vv_1)
+* [Collection 1 HH distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_1)
+* [Collection 1 HH+HV distribution](https://explorer.dev.dea.ga.gov.au/products/ga_s1_nrb_iw_hh_hv_1)
 
 ## Documentation
 
@@ -22,10 +33,14 @@ This repository provides examples for how to load data in two ways:
 
 If you are not a Geoscience Australia employee, you will need to use the STAC API approach.
 
+Both Collection 0 and Collection 1 are available.
+
 We provide two options for documentation
 * [Rendered html pages](demo_html_pages), which can be viewed in a browser. 
 This shows you the outcome of each step required to load and transform the data.
 * [iPython notebooks](demo_notebooks), which can be run in an appropriate environment.
+  * [Collection 0 tutorial](demo_notebooks/tutorial_c0)
+  * [Collection 1 tutorial](demo_notebooks/tutorial_c1)
 
 To view either file, you will first need to [clone the repository](#cloning-the-repository) to get a copy of the files.
 
