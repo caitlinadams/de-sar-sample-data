@@ -3972,7 +3972,7 @@ packages:
 - pypi: ./
   name: de-sar-demo
   version: 0.0.1
-  sha256: a27de47b529a5aad8118860dbcdd6bd8ae759fd7c0a678990b08ec3cd48137b3
+  sha256: 719ce4646f3213d8db239a4ce4389115f8be2fb4f518f762898fb4964826921b
   requires_dist:
   - dea-tools>=0.4.7,<0.5
   requires_python: '>=3.8'
@@ -10722,7 +10722,7 @@ packages:
   requires_dist:
   - click>=7.1
   - pydantic>=1.7.3
-  - pystac>=1.12.1
+  - pystac>=1.0.0
   - pystac-client>=0.2.0
   - pytz>=2020.5
   - requests>=2.25.1
