@@ -14,10 +14,16 @@ dependencies:
 - scipy >=1.15.2,<2
 - geopandas >=1.1.1,<2
 - scikit-image >=0.25.2,<0.26
+- asf_search >=10.1.2,<11
 - netcdf4 >=1.7.3,<2
 - ipywidgets >=8.1.8,<9
 - pip
 - pip:
   - -e .
   - dea-tools>=0.4.7, <0.5
+<<<<<<< HEAD
   - pystac==1.12.1
+=======
+  - stac-geoparquet>=0.7.0, <0.8
+  - fsspec
+>>>>>>> main
