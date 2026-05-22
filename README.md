@@ -35,14 +35,11 @@ If you are not a Geoscience Australia employee, you will need to use the STAC AP
 
 Both Collection 0 and Collection 1 are available.
 
-We provide two options for documentation
-* [Rendered html pages](demo_html_pages), which can be viewed in a browser. 
-This shows you the outcome of each step required to load and transform the data.
-* [iPython notebooks](demo_notebooks), which can be run in an appropriate environment.
+We provide [iPython notebooks](demo_notebooks), which can be run in an appropriate environment.
   * [Collection 0 tutorial](demo_notebooks/tutorial_c0)
   * [Collection 1 tutorial](demo_notebooks/tutorial_c1)
 
-To view either file, you will first need to [clone the repository](#cloning-the-repository) to get a copy of the files.
+To run the notebooks, you will first need to [clone the repository](#cloning-the-repository) to get a copy of the files.
 
 We also have a collection of recorded videos that provide an overview of each iPython notebook. 
 If you wish to view these videos, please contact DigitalEarthAntarctic@ga.gov.au to request access.
