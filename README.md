@@ -67,7 +67,9 @@ This repository is in a state of active development, so we recommend regularly r
 
 #### Own computer or cloud
 If using your own computer to load data from the STAC API, you will need a Python environment with the required packages. 
-Two different environment files are provided:
+Three different environment files are provided:
+* A [requirements.txt](requirements.txt) file
+    * Run `pip install -r requirements.txt` in your preferred Python environment
 * A Conda [environment.yaml](environment.yaml) file
     * [Install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html#installing-conda)
     * [Install the environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
