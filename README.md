@@ -78,25 +78,23 @@ Two different environment files are provided:
     * [Activate the environment](https://pixi.sh/dev/workspace/environment/#activation)
 
 You can also choose to manually install the following required packages using your preferred python package manager:
-* asf_search       10.1.2
-* botocore         1.40.70
-* dea_tools        0.4.7
-* folium           0.19.7
-* fsspec           2025.10.0
-* geopandas        1.1.1
-* ipykernel        6.31.0
+* asf-search       12.2.2
+* dea-tools        0.4.10
+* ipykernel        7.3.0
 * ipywidgets       8.1.8
-* matplotlib       3.10.7
-* netcdf4          1.7.3
-* numpy            2.3.4
-* odc-stac         0.4.0
-* pystac           1.14.1 
-* pystac-client    0.8.6
-* python           3.13.9
+* matplotlib       3.10.9
+* netcdf4          1.7.4
+* numpy            2.4.6
+* odc-geo          0.5.1
+* odc-stac         0.5.2
+* proj             9.8.1
+* pystac           1.14.3
+* pystac-client    0.9.0
 * scikit-image     0.25.2
-* scipy            1.16.3
-* stac_geoparquet  0.7.0 
-* de_sar_demo      0.0.1    (use `pip install .` from the repository directory)
+* scipy            1.17.1
+* stac-geoparquet  0.8.0
+* xarray           2025.12.0
+* de-sar-demo      0.0.1     (use `pip install .` from the repository directory)
 
 #### DEA Sandbox
 This is intended for employees internal to Geoscience Australia.
