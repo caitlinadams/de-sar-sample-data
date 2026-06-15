@@ -52,3 +52,6 @@ export-conda = """
 pixi workspace export conda-environment -e default environment.yaml && \
 sed -ix "s/^name: default$/name: de-sar-sample-data/" environment.yaml; rm environment.yamlx
 """
+export-requirements = """
+uv pip compile pyproject.toml -o requirements.txt
+"""
