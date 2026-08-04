@@ -232,7 +232,7 @@ def find_and_load_single_scene_from_stac(
     if speckle_filter:
         print(f"    Applying speckle filter")
         for band in bands_query:
-            ds[band] = lee_filter_xr(ds[band], ds[nlooks_band], size=3)
+            ds[band] = lee_filter_xr(ds[band], size=3)
 
     # Convert to db
     if db:
