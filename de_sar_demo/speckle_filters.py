@@ -5,7 +5,7 @@ import xarray as xr
 
 # Adapted from https://stackoverflow.com/questions/39785970/speckle-lee-filter-in-python
 # Made NaN aware following https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/PIRODDI1/NormConv/NormConv.html
-def lee_filter(img, nlooks, size=3):
+def lee_filter(img, size=3):
     """
     Applies the Lee filter to reduce speckle noise in an image.
     This function is NaN-aware and optimised by using uniform_filter from scipy.ndimage.
@@ -17,11 +17,7 @@ def lee_filter(img, nlooks, size=3):
     - img_uniform_filter = scipy.ndimage.uniform_filter(img)
     - weights = img_filter_variance / (img_filter_variance + img_reference_variance)
     - img_filter_variance = scipy.ndimage.uniform_filter(img**2) - img_uniform_filter**2
-    - img_reference_variance = 1/scipy.ndimage.uniform_filter(img_n_looks)
-
-    The reference variance is derived from the mean number of looks for the image,
-    where number of looks is a data layer generated during the processing of normalised
-    radar backscatter and serves to characterise the speckle variance by 1/n_looks
+    - img_reference_variance = np.nanvar(img)
 
     The principle of Normalised Convolution is used to make the function nan-aware.
     The basic principles are as follows:
@@ -36,7 +32,6 @@ def lee_filter(img, nlooks, size=3):
 
     Parameters:
     img (ndarray): Input image to be filtered.
-    img_nlooks (ndarray): The per-pixel number of looks for the input image
     size (int): Size of the uniform filter window.
 
     Returns:
@@ -45,17 +40,12 @@ def lee_filter(img, nlooks, size=3):
 
     # 1: Create the certainty map, which is 0 if NaN, 1 if valid
     img_certainty_map = ~np.isnan(img)
-    nlooks_certainty_map = ~np.isnan(nlooks)
 
     # 2: Apply the uniform filter to the certainty map
     mean_img_certainty_map = uniform_filter(img_certainty_map.astype(float), size=size)
-    mean_nlooks_certainty_map = uniform_filter(
-        nlooks_certainty_map.astype(float), size=size
-    )
 
     # 3: Replace all NaNs in the image with 0
     img_zero = np.where(img_certainty_map, img, 0.0)
-    nlooks_zero = np.where(nlooks_certainty_map, nlooks, 0.0)
 
     # 4, 5, 6: Apply uniform filter to zeroed image, squared zeroed image and zeroed nlooks image, and normalise by filtered certainty map
     with np.errstate(invalid="ignore", divide="ignore"):
@@ -63,16 +53,12 @@ def lee_filter(img, nlooks, size=3):
         img_zero_sq_mean = (
             uniform_filter(img_zero**2, size=size) / mean_img_certainty_map
         )
-        nlooks_zero_mean = (
-            uniform_filter(nlooks_zero, size=size) / mean_nlooks_certainty_map
-        )
 
     # 7a: Calculate variance on filtered pixels
     img_zero_variance = np.clip(img_zero_sq_mean - img_zero_mean**2, 0, None)
 
-    # 7b: Calculate the reference variance from the number of looks
-    with np.errstate(invalid="ignore", divide="ignore"):
-        img_reference_variance = 1 / nlooks_zero_mean
+    # 7b: Calculate the reference variance from the image
+    img_reference_variance = np.nanvar(img)
 
     # 7c: Calculate the weights term for the Lee filter
     img_weights = img_zero_variance / (img_zero_variance + img_reference_variance)
@@ -82,7 +68,7 @@ def lee_filter(img, nlooks, size=3):
 
     # 8: Replace any elements that were originally NaN with NaN
     img_lee_filtered = np.where(
-        img_certainty_map & nlooks_certainty_map & (mean_img_certainty_map > 0),
+        img_certainty_map & (mean_img_certainty_map > 0),
         img_zero_lee_filtered,
         np.nan,
     )
@@ -91,7 +77,7 @@ def lee_filter(img, nlooks, size=3):
 
 
 # Define a function to apply the Lee filter to a DataArray
-def lee_filter_xr(da_backscatter: xr.DataArray, da_nlooks: xr.DataArray, size=7):
+def lee_filter_xr(da_backscatter: xr.DataArray, size=7):
     """
     Applies the Lee filter to the provided DataArray.
 
@@ -107,8 +93,7 @@ def lee_filter_xr(da_backscatter: xr.DataArray, da_nlooks: xr.DataArray, size=7)
     filtered_data = xr.apply_ufunc(
         lee_filter,
         da_backscatter,
-        da_nlooks,
-        input_core_dims=[["y", "x"], ["y", "x"]],
+        input_core_dims=[["y", "x"]],
         output_core_dims=[["y", "x"]],
         vectorize=True,
         dask="parallelized",
