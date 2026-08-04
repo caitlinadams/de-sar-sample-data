@@ -83,7 +83,6 @@ def lee_filter_xr(da_backscatter: xr.DataArray, size=7):
 
     Parameters:
     da (xarray.DataArray): The data array to be filtered.
-    nlooks (xarray.DataArray): The per pixel number of looks for da
     size (int): Size of the uniform filter window. Default is 7.
 
     Returns:
