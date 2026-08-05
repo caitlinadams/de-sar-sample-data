@@ -3,7 +3,7 @@ from odc.geo import BoundingBox
 import odc.geo.xr
 from odc.stac import load
 from pystac_client import Client
-from de_sar_demo.speckle_filters import apply_lee_filter
+from de_sar_demo.speckle_filters import lee_filter_xr
 import numpy as np
 import xarray
 from pathlib import Path
@@ -65,6 +65,7 @@ def _get_metadata_from_ASF(scene: str) -> SceneMetadata:
 def find_and_load_single_scene_from_stac(
     stac_client: Client,
     scene: str,
+    collection: Literal[0, 1] = 1,
     output_format: Literal["geotiff", "xarray"] = "geotiff",
     output_dir: Optional[str] = None,
     speckle_filter: bool = True,
@@ -78,6 +79,8 @@ def find_and_load_single_scene_from_stac(
         the STAC client used by pystac-client
     scene : str
         the scene ID to load, e.g. `S1A_IW_SLC__1SSH_20250402T103324_20250402T103352_058576_073FF3_ED28`. Must be an SLC
+    collection: Literal[0, 1], optional
+        the DE SAR collection number, either 0 or 1. Use 1 for the most up-to-date data, by default 1
     output_format : Literal["geotiff", "xarray"], optional
         the output format. One of "geotiff" or "xarray", by default "geotiff"
     output_dir : Optional[str], optional
@@ -109,22 +112,47 @@ def find_and_load_single_scene_from_stac(
     print("    Querying ASF for metadata")
     scene_metadata = _get_metadata_from_ASF(scene)
 
-    # Update settings depending on chosen polarisation
-    if scene_metadata.polarization == "HH":
-        collections_query = ["ga_s1_nrb_iw_hh_0"]
-        bands_query = ["HH_gamma0"]
-    elif scene_metadata.polarization == "HH+HV":
-        collections_query = ["ga_s1_nrb_iw_hh_hv_0"]
-        bands_query = ["HH_gamma0", "HV_gamma0"]
-    elif scene_metadata.polarization == "VV":
-        collections_query = ["ga_s1_nrb_iw_vv_0"]
-        bands_query = ["VV_gamma0"]
-    elif scene_metadata.polarization == "VV+VH":
-        collections_query = ["ga_s1_nrb_iw_vv_vh_0"]
-        bands_query = ["VV_gamma0", "VH_gamma0"]
+    if collection == 0:
+        nlooks_band = "number_of_looks"
+        # Update settings depending on chosen polarisation
+        if scene_metadata.polarization == "HH":
+            collections_query = ["ga_s1_nrb_iw_hh_0"]
+            bands_query = ["HH_gamma0", nlooks_band]
+        elif scene_metadata.polarization == "HH+HV":
+            collections_query = ["ga_s1_nrb_iw_hh_hv_0"]
+            bands_query = ["HH_gamma0", "HV_gamma0", nlooks_band]
+        elif scene_metadata.polarization == "VV":
+            collections_query = ["ga_s1_nrb_iw_vv_0"]
+            bands_query = ["VV_gamma0", nlooks_band]
+        elif scene_metadata.polarization == "VV+VH":
+            collections_query = ["ga_s1_nrb_iw_vv_vh_0"]
+            bands_query = ["VV_gamma0", "VH_gamma0", nlooks_band]
+        else:
+            raise ValueError(
+                f"Scene polarisation must be one of either HH, HH+HV, VV, or VV+VH. Returned polarisation from ASF was: {scene_metadata.polarization}"
+            )
+    elif collection == 1:
+        nlooks_band = "oa_number_of_looks"
+        # Update settings depending on chosen polarisation
+        if scene_metadata.polarization == "HH":
+            collections_query = ["ga_s1_nrb_iw_hh_1"]
+            bands_query = ["hh_gamma0", nlooks_band]
+        elif scene_metadata.polarization == "HH+HV":
+            collections_query = ["ga_s1_nrb_iw_hh_hv_1"]
+            bands_query = ["hh_gamma0", "hv_gamma0", nlooks_band]
+        elif scene_metadata.polarization == "VV":
+            collections_query = ["ga_s1_nrb_iw_vv_1"]
+            bands_query = ["vv_gamma0", nlooks_band]
+        elif scene_metadata.polarization == "VV+VH":
+            collections_query = ["ga_s1_nrb_iw_vv_vh_1"]
+            bands_query = ["vv_gamma0", "vh_gamma0", nlooks_band]
+        else:
+            raise ValueError(
+                f"Scene polarisation must be one of either HH, HH+HV, VV, or VV+VH. Returned polarisation from ASF was: {scene_metadata.polarization}"
+            )
     else:
         raise ValueError(
-            f"Scene polarisation must be one of either HH, HH+HV, VV, or VV+VH. Returned polarisation from ASF was: {scene_metadata.polarization}"
+            f"Must specify collection as either 0 or 1. Supplied collection value was {collection}"
         )
 
     # Get list of output files
@@ -181,7 +209,7 @@ def find_and_load_single_scene_from_stac(
 
     if len(bursts_for_scene) == 0:
         raise RuntimeError(
-            f"No bursts were found for {scene}. This scene is not available as part of our current collection 0 data offering."
+            f"No bursts were found for {scene}. This scene is not available as part of our current collection {collection} data offering. Try the other collection."
         )
     else:
         print(f"        Found {len(bursts_for_scene)} bursts for scene")
@@ -197,11 +225,14 @@ def find_and_load_single_scene_from_stac(
         groupby="sarard:scene_id",
     ).squeeze()
 
+    # Drop the nlooks band from the list of bands to process
+    bands_query.remove(nlooks_band)
+
     # Applying speckle filtering
     if speckle_filter:
         print(f"    Applying speckle filter")
         for band in bands_query:
-            ds[band] = apply_lee_filter(ds[band], size=3)
+            ds[band] = lee_filter_xr(ds[band], size=3)
 
     # Convert to db
     if db:
@@ -215,4 +246,4 @@ def find_and_load_single_scene_from_stac(
         band_files = zip(bands_query, output_files)
         for band, file in band_files:
             print(f"    Writing to file: {file}")
-            ds[band].odc.write_cog(file)
+            ds[band].odc.write_cog(file, overwrite=True)
